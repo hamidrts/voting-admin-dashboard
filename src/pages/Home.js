@@ -5,7 +5,6 @@ import Filter from "../components/Filter";
 import UpdateElection from "../components/UpdateElection";
 
 const test = 1;
-const test2 = 2;
 
 function Home() {
   const [department, setDepartment] = useState("");
