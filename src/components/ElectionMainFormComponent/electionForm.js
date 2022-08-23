@@ -8,25 +8,10 @@ const departments = ["grocery", "meat", "paylue", "stock", "public"];
 const statuses = ["open", "close", "planned", "cancel", "draft"];
 
 export default function ElectionForm({
-  department,
-  setDepartment,
-  name,
-  setName,
-  term,
-  setTerm,
-  startDate,
-  setStartDate,
-  finishDate,
-  setFinishDate,
-  status,
-  setStatus,
+  electionForm,
+  setElectionForm,
   setSubmitError,
-  departmentError,
-  nameError,
-  termError,
-  startDateError,
-  finishDateError,
-  statusError,
+  electionFormError,
 }) {
   return (
     <Box
@@ -39,15 +24,17 @@ export default function ElectionForm({
     >
       <div>
         <TextField
-          error={departmentError}
-          className={department ? "active" : "passive"}
+          error={electionFormError.departmentError}
+          className={electionForm.department ? "active" : "passive"}
           required
           id="outlined-select-departmant"
           select
           label="Departmant"
-          value={department}
+          value={electionForm.department}
           onChange={(event) => {
-            setDepartment(event.target.value);
+            setElectionForm((previous) => {
+              return { ...previous, department: event.target.value };
+            });
             setSubmitError("");
           }}
           helperText="Please select your departmant"
@@ -59,26 +46,30 @@ export default function ElectionForm({
           ))}
         </TextField>
         <TextField
-          error={nameError}
-          className={name ? "active" : "passive"}
+          error={electionFormError.electionNameError}
+          className={electionForm.electionName ? "active" : "passive"}
           required
           id="outlined-election-name"
           label="Election Name"
-          value={name}
+          value={electionForm.electionName}
           onChange={(event) => {
-            setName(event.target.value);
+            setElectionForm((previous) => {
+              return { ...previous, electionName: event.target.value };
+            });
             setSubmitError("");
           }}
         />
         <TextField
-          error={termError}
-          className={term ? "active" : "passive"}
+          error={electionFormError.termError}
+          className={electionForm.term ? "active" : "passive"}
           id="outlined-number"
           label="Term"
           type="number"
-          value={term}
+          value={electionForm.term}
           onChange={(event) => {
-            setTerm(event.target.value);
+            setElectionForm((previous) => {
+              return { ...previous, term: event.target.value };
+            });
             setSubmitError("");
           }}
           InputLabelProps={{
@@ -86,14 +77,16 @@ export default function ElectionForm({
           }}
         />
         <TextField
-          error={startDateError}
-          className={startDate ? "active" : "passive"}
+          error={electionFormError.startDateError}
+          className={electionForm.startDate ? "active" : "passive"}
           id="outlined-number"
           label="Start Date"
           type="date"
-          value={startDate}
+          value={electionForm.startDate}
           onChange={(event) => {
-            setStartDate(event.target.value);
+            setElectionForm((previous) => {
+              return { ...previous, startDate: event.target.value };
+            });
             setSubmitError("");
           }}
           InputLabelProps={{
@@ -101,14 +94,16 @@ export default function ElectionForm({
           }}
         />
         <TextField
-          error={finishDateError}
-          className={finishDate ? "active" : "passive"}
+          error={electionFormError.finishDateError}
+          className={electionForm.finishDate ? "active" : "passive"}
           id="outlined-number"
           label="Finish Date"
           type="date"
-          value={finishDate}
+          value={electionForm.finishDate}
           onChange={(event) => {
-            setFinishDate(event.target.value);
+            setElectionForm((previous) => {
+              return { ...previous, finishDate: event.target.value };
+            });
             setSubmitError("");
           }}
           InputLabelProps={{
@@ -116,15 +111,17 @@ export default function ElectionForm({
           }}
         />
         <TextField
-          error={statusError}
-          className={status ? "active" : "passive"}
+          error={electionFormError.statusError}
+          className={electionForm.status ? "active" : "passive"}
           required
           id="outlined-select-status"
           select
           label="Status"
-          value={status}
+          value={electionForm.status}
           onChange={(event) => {
-            setStatus(event.target.value);
+            setElectionForm((previous) => {
+              return { ...previous, status: event.target.value };
+            });
             setSubmitError("");
           }}
           helperText="Please select current status"

@@ -1,12 +1,22 @@
 import React from "react";
-import { useEffect, useState } from "react";
-import ElectionCart from "../components/ElectionCart";
-import Filter from "../components/Filter";
-import UpdateElection from "../components/UpdateElection";
+import { useEffect, useState, useContext } from "react";
 
-const test = 1;
+import ElectionCart from "../components/ElectionCart";
+import ElectionMainForm from "../components/ElectionMainForm";
+import Filter from "../components/Filter";
+import { useLoginContext } from "../hooks/useLoginContext";
 
 function Home() {
+  const { user } = useLoginContext();
+  const [initialElectionForm, setInitialElectionForm] = useState({
+    department: "",
+    electionName: "",
+    term: "",
+    startDate: "",
+    finishDate: "",
+    status: "",
+  });
+
   const [department, setDepartment] = useState("");
   const [term, setTerm] = useState("");
   const [status, setStatus] = useState("");
@@ -14,23 +24,20 @@ function Home() {
 
   const [displayUpdate, setDisplayUpdate] = useState(false);
 
-  const [updateDepartment, setUpdateDepartment] = useState("");
-  const [updateName, setUpdateName] = useState("");
-  const [updateTerm, setUpdateTerm] = useState("");
-  const [updateStartDate, setUpdateStartDate] = useState("");
-  const [updateFinishDate, setUpdateFinishDate] = useState("");
-  const [updateStatus, setUpdateStatus] = useState("");
-  const [updateCandidate, setUpdateCandidate] = useState("");
+  const [initialCandidateArray, setInitialCandidateArray] = useState("");
   const [electionId, setElectionId] = useState("");
 
   const [updateFilter, setUpdateFilter] = useState(false);
   const [update3Election, setUpdate3Election] = useState(true);
 
   useEffect(() => {
+    console.log("hey", user);
     const fetchLast3Election = async () => {
-      const responce = await fetch("/voting/admin/");
+      const responce = await fetch("/voting/admin/", {
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
       if (!responce.ok) {
-        // console.log(responce);
+        console.log(responce.error);
         // console.log(responce.status, responce.statusText);
       } else {
         let last3Election = await responce.json();
@@ -38,7 +45,11 @@ function Home() {
         setDisplayArray(last3Election);
       }
     };
-    fetchLast3Election();
+
+    if (user) {
+      fetchLast3Election();
+    }
+
     setUpdateFilter(false);
   }, [update3Election]);
 
@@ -60,13 +71,13 @@ function Home() {
         "&term=" +
         term +
         "&status=" +
-        status
+        status,
+      { headers: { Authorization: `Bearer ${user.token}` } }
     );
     console.log(response);
 
     if (!response.ok) {
       console.log(response);
-      console.log(response.status, response.statusText);
     } else {
       let filterResult = await response.json();
       setDisplayArray(filterResult);
@@ -82,19 +93,49 @@ function Home() {
         choosedElection = election;
       }
     });
-    setUpdateDepartment(choosedElection.department);
-    setUpdateName(choosedElection.electionName);
-    setUpdateTerm(choosedElection.term);
-    setUpdateStartDate(choosedElection.startDate);
-    setUpdateFinishDate(choosedElection.finishDate);
-    setUpdateStatus(choosedElection.status);
-    setUpdateCandidate(choosedElection.candidates);
+    setInitialElectionForm({
+      ...initialElectionForm,
+      department: choosedElection.department,
+      electionName: choosedElection.electionName,
+      term: choosedElection.term,
+      startDate: choosedElection.startDate,
+      finishDate: choosedElection.finishDate,
+      status: choosedElection.status,
+    });
+    console.log(choosedElection);
+    setInitialCandidateArray(choosedElection.candidates);
     setElectionId(choosedElection._id);
     setDisplayUpdate(true);
   };
 
   const handleCancel = () => {
     setDisplayUpdate(false);
+  };
+
+  const updateElection = async (election) => {
+    let rout = "/voting/admin/" + electionId;
+    const response = await fetch(rout, {
+      method: "PATCH",
+      body: JSON.stringify(election),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+    return response;
+  };
+
+  const additionalTask = () => {
+    if (updateFilter) {
+      fetchFilteredData();
+    } else {
+      if (update3Election) {
+        setUpdate3Election(false);
+      } else {
+        setUpdate3Election(true);
+      }
+    }
+    handleCancel();
   };
 
   return (
@@ -129,29 +170,20 @@ function Home() {
               electionName={election.electionName}
               term={election.term}
               status={election.status}
-              startDate={election.startDate}
-              finishDate={election.finishDate}
+              startDate={election.startDate.slice(0, 10)}
+              finishDate={election.finishDate.slice(0, 10)}
               id={election._id}
               selectElection={selectElection}
             />
           );
         })}
         {displayUpdate ? (
-          <UpdateElection
-            updateDepartment={updateDepartment}
-            updateName={updateName}
-            updateTerm={updateTerm}
-            updateStartDate={updateStartDate}
-            updateFinishDate={updateFinishDate}
-            updateStatus={updateStatus}
-            updateCandidate={updateCandidate}
-            electionId={electionId}
-            setDisplayUpdate={setDisplayUpdate}
+          <ElectionMainForm
+            conectWithServer={updateElection}
+            additionalTask={additionalTask}
+            initialElectionForm={initialElectionForm}
+            initialCandidateArray={initialCandidateArray}
             handleCancel={handleCancel}
-            updateFilter={updateFilter}
-            update3Election={update3Election}
-            fetchFilteredData={fetchFilteredData}
-            setUpdate3Election={setUpdate3Election}
           />
         ) : (
           ""

@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
 import Result from "./pages/Result";
+import Login from "./pages/Login";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             element={<CreateElection />}
           />
           <Route path="/voting/admin/result" element={<Result />} />
+          <Route path="/voting/admin/login" element={<Login />} />
         </Routes>
       </BrowserRouter>
     </div>
