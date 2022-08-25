@@ -4,22 +4,26 @@ import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
 import Result from "./pages/Result";
 import Login from "./pages/Login";
+import { useLoginContext } from "./hooks/useLoginContext";
+import Layout from "./pages/Layout";
 
 function App() {
+  const user = useLoginContext();
+  console.log(user.user);
   return (
     <div className="App">
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/voting/admin" element={<Home />} />
-          <Route
-            path="/voting/admin/createElection"
-            element={<CreateElection />}
-          />
-          <Route path="/voting/admin/result" element={<Result />} />
-          <Route path="/voting/admin/login" element={<Login />} />
-        </Routes>
-      </BrowserRouter>
+      {!user.user && <Login />}
+      {user.user && (
+        <BrowserRouter>
+          <Routes>
+            <Route path="/voting/admin/" element={<Layout />}>
+              <Route path="createElection" element={<CreateElection />} />
+              <Route path="result" element={<Result />} />
+              <Route index element={<Home />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      )}
     </div>
   );
 }
