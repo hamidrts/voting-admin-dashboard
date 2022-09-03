@@ -16,7 +16,7 @@ function App() {
       {user.user && (
         <BrowserRouter>
           <Routes>
-            <Route path="/voting/admin/" element={<Layout />}>
+            <Route path="/" element={<Layout />}>
               <Route path="createElection" element={<CreateElection />} />
               <Route path="result" element={<Result />} />
               <Route index element={<Home />} />

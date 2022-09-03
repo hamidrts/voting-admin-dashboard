@@ -31,13 +31,13 @@ function Navbar() {
             }}
           >
             <div>
-              <Link className="link" to="/voting/admin">
+              <Link className="link" to="/">
                 Home
               </Link>
-              <Link className="link" to="/voting/admin/createElection">
+              <Link className="link" to="/createElection">
                 Create Election
               </Link>
-              <Link className="link" to="/voting/admin/result">
+              <Link className="link" to="/result">
                 Result
               </Link>
             </div>
