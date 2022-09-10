@@ -214,6 +214,10 @@ function ElectionMainForm({
         return { ...previous, statusError: false };
       });
     }
+    if (electionForm.startDate > electionForm.finishDate) {
+      fillError = true;
+    }
+
     if (candidatesArray.length === 0) {
       setSubmitError("Please add candidate");
       fillError = true;
@@ -305,7 +309,7 @@ function ElectionMainForm({
           setElectionFormError={setElectionFormError}
           electionFormError={electionFormError}
         />
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex", justifyContent: "space-around" }}>
           {candidatesArray.map((candid) => {
             return (
               <CandidateCard

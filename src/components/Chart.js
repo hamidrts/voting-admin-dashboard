@@ -1,10 +1,11 @@
 import React from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
+import Button from "@mui/material/Button";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export const data = {
+/* export const data = {
   labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
   datasets: [
     {
@@ -30,11 +31,25 @@ export const data = {
     },
   ],
 };
-
-export function Chart() {
+ */
+export default function Chart({ result, setResult }) {
   return (
-    <div style={{ width: "150px" }}>
-      <Pie data={data} width={20} height={20} />
+    <div className="chart-holder">
+      <div className="chart">
+        <Pie data={result} width={20} height={20} />
+      </div>
+
+      <div className="select-button-holder">
+        <Button
+          onClick={() => {
+            setResult("");
+          }}
+          className="select-button"
+          variant="contained"
+        >
+          Close
+        </Button>
+      </div>
     </div>
   );
 }

@@ -2,7 +2,7 @@ import CreateElection from "./pages/CreateElection";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
-import Result from "./pages/Result";
+
 import Login from "./pages/Login";
 import { useLoginContext } from "./hooks/useLoginContext";
 import Layout from "./pages/Layout";
@@ -18,7 +18,6 @@ function App() {
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route path="createElection" element={<CreateElection />} />
-              <Route path="result" element={<Result />} />
               <Route index element={<Home />} />
             </Route>
           </Routes>

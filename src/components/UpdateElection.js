@@ -255,7 +255,7 @@ function UpdateElection({
           finishDateError={finishDateError}
           statusError={statusError}
         />
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex", justifyContent: "space-around" }}>
           {candidatesArray.map((candid) => {
             return (
               <CandidateCard

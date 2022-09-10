@@ -37,9 +37,6 @@ function Navbar() {
               <Link className="link" to="/createElection">
                 Create Election
               </Link>
-              <Link className="link" to="/result">
-                Result
-              </Link>
             </div>
             <div
               style={{

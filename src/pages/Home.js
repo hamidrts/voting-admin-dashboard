@@ -1,10 +1,10 @@
 import React from "react";
 import { useEffect, useState, useContext } from "react";
-
-import ElectionCart from "../components/ElectionCart";
+import ElectionCard from "../components/ElectionCard";
 import ElectionMainForm from "../components/ElectionMainForm";
 import Filter from "../components/Filter";
 import { useLoginContext } from "../hooks/useLoginContext";
+import Chart from "../components/Chart";
 
 function Home() {
   const { user } = useLoginContext();
@@ -16,7 +16,9 @@ function Home() {
     finishDate: "",
     status: "",
   });
+  const [ifElectionSelect, setIfElectionSelect] = useState(false);
 
+  const [result, setResult] = useState("");
   const [department, setDepartment] = useState("");
   const [term, setTerm] = useState("");
   const [status, setStatus] = useState("");
@@ -31,7 +33,6 @@ function Home() {
   const [update3Election, setUpdate3Election] = useState(true);
 
   useEffect(() => {
-    console.log("hey", user);
     const fetchLast3Election = async () => {
       const responce = await fetch("/voting/admin/", {
         headers: { Authorization: `Bearer ${user.token}` },
@@ -74,7 +75,6 @@ function Home() {
         status,
       { headers: { Authorization: `Bearer ${user.token}` } }
     );
-    console.log(response);
 
     if (!response.ok) {
       console.log(response);
@@ -102,14 +102,16 @@ function Home() {
       finishDate: choosedElection.finishDate,
       status: choosedElection.status,
     });
-    console.log(choosedElection);
+
     setInitialCandidateArray(choosedElection.candidates);
     setElectionId(choosedElection._id);
     setDisplayUpdate(true);
+    setIfElectionSelect(true);
   };
 
   const handleCancel = () => {
     setDisplayUpdate(false);
+    setIfElectionSelect(false);
   };
 
   const updateElection = async (election) => {
@@ -138,57 +140,107 @@ function Home() {
     handleCancel();
   };
 
+  const handleSeeResult = (evt) => {
+    let choosedElection;
+
+    displayArray.forEach((election) => {
+      if (election._id == evt.target.id) {
+        choosedElection = election;
+      }
+    });
+
+    let labelOfChart = [];
+
+    let dataOfChart = [];
+
+    choosedElection.candidates.forEach((candid) => {
+      choosedElection.result.forEach((result) => {
+        if (candid._id === result.candid) {
+          dataOfChart.push(result.votes);
+          labelOfChart.push(candid.candidName + " " + result.votes);
+        }
+      });
+    });
+
+    const data = {
+      labels: labelOfChart,
+      datasets: [
+        {
+          label: "# of Votes",
+          data: dataOfChart,
+          backgroundColor: [
+            "rgba(255, 99, 132, 0.2)",
+            "rgba(54, 162, 235, 0.2)",
+            "rgba(255, 206, 86, 0.2)",
+            "rgba(75, 192, 192, 0.2)",
+            "rgba(153, 102, 255, 0.2)",
+            "rgba(255, 159, 64, 0.2)",
+          ],
+          borderColor: [
+            "rgba(255, 99, 132, 1)",
+            "rgba(54, 162, 235, 1)",
+            "rgba(255, 206, 86, 1)",
+            "rgba(75, 192, 192, 1)",
+            "rgba(153, 102, 255, 1)",
+            "rgba(255, 159, 64, 1)",
+          ],
+          borderWidth: 1,
+        },
+      ],
+    };
+    setResult(data);
+    console.log(result);
+  };
+
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        marginTop: "50px",
-      }}
-    >
+    <div>
       <div
         style={{
-          maxWidth: "1000px",
-
-          background: "white",
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "50px",
+          paddingBottom: "25px",
         }}
       >
-        <Filter
-          department={department}
-          term={term}
-          status={status}
-          setTerm={setTerm}
-          setDepartment={setDepartment}
-          setStatus={setStatus}
-          fetchFilteredData={fetchFilteredData}
-        />
-        {displayArray.map((election) => {
-          return (
-            <ElectionCart
-              key={election._id}
-              department={election.department}
-              electionName={election.electionName}
-              term={election.term}
-              status={election.status}
-              startDate={election.startDate.slice(0, 10)}
-              finishDate={election.finishDate.slice(0, 10)}
-              id={election._id}
-              selectElection={selectElection}
-            />
-          );
-        })}
-        {displayUpdate ? (
-          <ElectionMainForm
-            conectWithServer={updateElection}
-            additionalTask={additionalTask}
-            initialElectionForm={initialElectionForm}
-            initialCandidateArray={initialCandidateArray}
-            handleCancel={handleCancel}
+        <div
+          style={{
+            maxWidth: "1000px",
+            paddingBottom: "25px",
+            background: "white",
+          }}
+        >
+          <Filter
+            department={department}
+            term={term}
+            status={status}
+            setTerm={setTerm}
+            setDepartment={setDepartment}
+            setStatus={setStatus}
+            fetchFilteredData={fetchFilteredData}
           />
-        ) : (
-          ""
-        )}
+          {displayArray.map((election, key) => {
+            return (
+              <ElectionCard
+                key={key}
+                ifElectionSelect={ifElectionSelect}
+                election={election}
+                handleSelectElection={selectElection}
+                handleSeeResult={handleSeeResult}
+              />
+            );
+          })}
+          {displayUpdate && (
+            <ElectionMainForm
+              conectWithServer={updateElection}
+              additionalTask={additionalTask}
+              initialElectionForm={initialElectionForm}
+              initialCandidateArray={initialCandidateArray}
+              handleCancel={handleCancel}
+            />
+          )}
+        </div>
       </div>
+      <div>{result && <Chart result={result} setResult={setResult} />}</div>
     </div>
   );
 }

@@ -33,3 +33,162 @@ code {
   padding-top: 60px;
   margin-right: 25px;
 }
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  background-color: rgb(181, 181, 231);
+  align-items: center;
+}
+
+.nominateDisplay {
+  display: flex;
+}
+
+img {
+  height: 200px;
+}
+
+.nominatecart {
+  margin-right: 20px;
+  border-radius: 5px;
+  background-color: rgb(177, 185, 192);
+}
+
+.voteHere {
+  margin-top: 50px;
+}
+
+h1 {
+  margin-right: 20px;
+  font-size: medium;
+}
+
+.election-specification {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 1fr;
+  margin-left: 5px;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.candidate-previwe {
+  display: flex;
+  justify-content: space-between;
+  width: 4fr;
+  margin-top: 15px;
+  margin-left: 50px;
+  margin-right: 15px;
+  margin-bottom: 5px;
+}
+
+.election-card {
+  display: flex;
+  margin-bottom: 5px;
+}
+
+body {
+  background-color: rgb(225, 222, 222);
+  margin: 0;
+  font-family: Roboto;
+}
+
+.election {
+  margin-top: 25px;
+  max-width: 650px;
+  margin-left: 10%;
+  margin-right: 10%;
+  background-color: rgb(238, 238, 238);
+  border-radius: 5px;
+  box-shadow: 3px 3px 3px rgb(128, 126, 126);
+}
+
+.select-button-holder {
+  display: flex;
+  justify-content: space-around;
+  padding-bottom: 10px;
+}
+
+.select-button {
+  width: 200px;
+  cursor: pointer;
+}
+
+.candidate-place {
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-around;
+  background-color: white;
+  border-radius: 5px;
+}
+
+.inactive {
+  margin-top: 25px;
+  max-width: 650px;
+  margin-left: 10%;
+  margin-right: 10%;
+
+  border-radius: 5px;
+  box-shadow: 3px 3px 3px rgb(128, 126, 126);
+  background-color: rgb(238, 238, 238);
+}
+
+.vote-bord {
+  margin-top: 50px;
+  border-radius: 5px;
+  box-shadow: 3px 3px 3px rgb(128, 126, 126);
+  background-color: white;
+}
+
+.button-holder {
+  display: flex;
+  justify-content: center;
+
+  margin-bottom: 10px;
+}
+
+.submit-button {
+  margin-bottom: 10px;
+  margin-left: 10px;
+}
+
+.active-candidate {
+  box-shadow: 3px 3px 10px rgba(51, 202, 76, 0.9),
+    -3px -3px 10px rgba(51, 202, 76, 0.9);
+  border: 1px solid black;
+}
+
+.logo {
+  width: 100px;
+  height: 100px;
+}
+
+header {
+  box-shadow: 3px 3px 3px rgba(38, 41, 39, 0.2);
+}
+
+.chart-holder {
+  width: 500px;
+  height: 500px;
+  background-color: rgb(181, 178, 178);
+  padding: 25px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-top: -250px;
+  margin-left: -250px;
+}
+
+.chart {
+  width: 350px;
+  margin-bottom: 35px;
+}
