@@ -38,6 +38,7 @@ function Filter({
           style={{
             display: "flex",
             justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
           <div>
@@ -61,6 +62,8 @@ function Filter({
                 </MenuItem>
               ))}
             </TextField>
+          </div>
+          <div>
             <TextField
               className={term ? "active" : "passive"}
               id="outlined-number"
@@ -74,6 +77,8 @@ function Filter({
                 shrink: true,
               }}
             />
+          </div>
+          <div>
             <TextField
               className={status ? "active" : "passive"}
               id="outlined-select-status"

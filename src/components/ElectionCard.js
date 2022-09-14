@@ -8,6 +8,7 @@ function ElectionCard({
   handleSelectElection,
   ifElectionSelect,
   handleSeeResult,
+  handleCloseElection,
 }) {
   const { user } = useLoginContext();
 
@@ -65,6 +66,15 @@ function ElectionCard({
           variant="contained"
         >
           See Result
+        </Button>
+        <Button
+          id={election._id}
+          onClick={handleCloseElection}
+          disabled={!user || ifElectionSelect || election.status !== "open"}
+          className="select-button"
+          variant="contained"
+        >
+          Close Election
         </Button>
       </div>
     </div>

@@ -5,6 +5,9 @@ import ElectionMainForm from "../components/ElectionMainForm";
 import Filter from "../components/Filter";
 import { useLoginContext } from "../hooks/useLoginContext";
 import Chart from "../components/Chart";
+import io from "socket.io-client";
+
+const socket = io.connect("http://localhost:5000");
 
 function Home() {
   const { user } = useLoginContext();
@@ -31,6 +34,12 @@ function Home() {
 
   const [updateFilter, setUpdateFilter] = useState(false);
   const [update3Election, setUpdate3Election] = useState(true);
+
+  useEffect(() => {
+    socket.on("receive_message", (data) => {
+      console.log(data.message);
+    });
+  }, [socket]);
 
   useEffect(() => {
     const fetchLast3Election = async () => {
@@ -154,7 +163,7 @@ function Home() {
     let dataOfChart = [];
 
     choosedElection.candidates.forEach((candid) => {
-      choosedElection.result.forEach((result) => {
+      choosedElection.result.votes.forEach((result) => {
         if (candid._id === result.candid) {
           dataOfChart.push(result.votes);
           labelOfChart.push(candid.candidName + " " + result.votes);
@@ -192,6 +201,44 @@ function Home() {
     console.log(result);
   };
 
+  const handleCloseElection = async (e) => {
+    let choosedElection;
+
+    displayArray.forEach((election) => {
+      if (election._id == e.target.id) {
+        choosedElection = election;
+      }
+    });
+    let rout = "/voting/admin/close/" + choosedElection._id;
+    const response = await fetch(rout, {
+      method: "PATCH",
+      body: JSON.stringify(choosedElection),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+
+    if (!response.ok) {
+      console.log(response);
+    } else {
+      let election = await response.json();
+      console.log("closet Election:", election);
+      election.status = "close";
+      console.log("displayArray", displayArray);
+      let newArray = displayArray.map((item) => {
+        if (item._id === election._id) {
+          return election;
+        } else {
+          return item;
+        }
+      });
+      console.log("newArray", newArray);
+
+      setDisplayArray(newArray);
+    }
+  };
+
   return (
     <div>
       <div
@@ -226,6 +273,7 @@ function Home() {
                 election={election}
                 handleSelectElection={selectElection}
                 handleSeeResult={handleSeeResult}
+                handleCloseElection={handleCloseElection}
               />
             );
           })}
